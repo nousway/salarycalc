@@ -1,0 +1,163 @@
+<!DOCTYPE html>
+<html lang="ru">
+<link rel="stylesheet" href="style.css">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Калькулятор зарплаты</title>
+
+</head>
+
+<body>
+  <div class="calculator">
+    <h1>Калькулятор зарплаты</h1>
+    
+    <div class="form-group">
+      <label for="position">Выберите должность</label>
+      <select id="position" onchange="updateRates()">
+        <option value="oper">Оператор</option>
+        <option value="ss">Старший смены</option>
+        <option value="st">Испытательный срок</option>
+      </select>
+    </div>
+
+    <div class="shifts-group">
+      <div class="shifts-header">Количество смен</div>
+      
+      <div class="shift-input-group">
+        <label for="dayShifts">Дневные</label>
+        <input type="number" id="dayShifts" min="0" placeholder="0">
+      </div>
+      
+      <div class="shift-input-group">
+        <label for="nightShifts">Ночные</label>
+        <input type="number" id="nightShifts" min="0" placeholder="0">
+      </div>
+    </div>
+
+    <div class="shifts-group">
+      <div class="shifts-header">Праздничные смены</div>
+      
+      <div class="shift-input-group">
+        <label for="holidayDay">Дневные</label>
+        <input type="number" id="holidayDay" min="0" placeholder="0">
+      </div>
+      
+      <div class="shift-input-group">
+        <label for="holidayNight">Ночные</label>
+        <input type="number" id="holidayNight" min="0" placeholder="0">
+      </div>
+    </div>
+    
+    <div class="form-group">
+      <label for="dayOffs">Количество дней отгула (Day Off)</label>
+      <input type="number" id="dayOffs" min="0" placeholder="0">
+    </div>
+    
+    <div class="form-group">
+      <label for="vacationDays">Отпускные дни</label>
+      <input type="number" id="vacationDays" min="0" placeholder="0">
+    </div>
+    
+    <div class="form-group">
+      <label for="sickDays">Больничные дни</label>
+      <input type="number" id="sickDays" min="0" placeholder="0">
+    </div>
+    
+    <div class="form-group">
+      <label for="penalties">Штрафы (KZT)</label>
+      <input type="number" id="penalties" min="0" placeholder="0">
+    </div>
+    
+    <div class="form-group">
+      <label for="bonuses">Премии (KZT)</label>
+      <input type="number" id="bonuses" min="0" placeholder="0">
+    </div>
+    
+    <div class="form-group">
+      <label for="receivedAmount">Поступило (KZT)</label>
+      <input type="number" id="receivedAmount" min="0" placeholder="0">
+    </div>
+    
+    <div class="checkboxes-container">
+      <div class="checkbox-group">
+        <input type="checkbox" id="avans">
+        <label for="avans">Вычесть аванс (70 000 KZT)</label>
+      </div>
+      <div class="checkbox-group">
+        <input type="checkbox" id="efficiency" checked>
+        <label for="efficiency">Премия за эффективность (+10%)</label>
+      </div>
+    </div>
+    
+    <div class="button-group">
+      <button onclick="calculateSalary()">Рассчитать зарплату</button>
+      <button onclick="resetForm()" class="secondary">Сбросить форму</button>
+    </div>
+    
+    <div class="result hidden" id="result"></div>
+
+    <div class="guide">
+      <h2 onclick="toggleGuide()">Инструкция по использованию</h2>
+      <div class="guide-content">
+        <p>Этот калькулятор предназначен для точного расчёта заработной платы сотрудников.</p>
+        
+        <h3>Порядок расчёта:</h3>
+        <ol>
+          <li>Выберите вашу должность из списка</li>
+          <li>Введите количество отработанных смен:
+            <ul>
+              <li>Все дневные/ночные смены</li>
+              <li>Кол-во дневных/ночных праздничных смен отдельно</li>
+            </ul>
+          </li>
+          <li>Укажите количество дней отгула (Day Off)</li>
+          <li>Введите количество дней отпуска и больничного</li>
+          <li>Укажите суммы штрафов и премий</li>
+          <li>Введите сумму, которая поступила на карту (для сравнения)</li>
+          <li>Отметьте соответствующие чекбоксы</li>
+          <li>Нажмите "Рассчитать зарплату"</li>
+        </ol>
+        
+        <h3>Актуальные ставки:</h3>
+        <ul>
+          <li><strong>Оператор:</strong>
+            <ul>
+              <li>Дневная смена: 22 858 KZT</li>
+              <li>Ночная смена: 25 142 KZT</li>
+              <li>Отпускные/больничные: 13 285.71 KZT/день</li>
+              <li>Day Off: (дневная + ночная) / 2 = 24 000 KZT</li>
+            </ul>
+          </li>
+          <li><strong>Старший смены:</strong>
+            <ul>
+              <li>Дневная смена: 25 143 KZT</li>
+              <li>Ночная смена: 27 657 KZT</li>
+              <li>Отпускные/больничные: 14 614.28 KZT/день</li>
+              <li>Day Off: (дневная + ночная) / 2 = 26 400 KZT</li>
+            </ul>
+          </li>
+          <li><strong>Испытательный срок:</strong>
+            <ul>
+              <li>Дневная смена: 19 429 KZT</li>
+              <li>Ночная смена: 21 370 KZT</li>
+              <li>Отпускные/больничные: не предусмотрены</li>
+              <li>Day Off: (дневная + ночная) / 2 = 20 400 KZT</li>
+            </ul>
+          </li>
+        </ul>
+        
+        <h3>Дополнительные начисления:</h3>
+        <ul>
+          <li>Премия за эффективность: +10% к обычным сменам (не применяется к праздничным)</li>
+          <li>Аванс: фиксированная сумма 70 000 KZT</li>
+        </ul>
+      </div>
+    </div>
+  </div>
+
+  <script src="script.js"></script>
+  
+</body>
+</html>
