@@ -29,7 +29,7 @@
   }
 
   .calculator {
-    background-color: white;
+    background-color: red;
     padding: 30px;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
