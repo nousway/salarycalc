@@ -304,26 +304,24 @@ function toggleTheme() {
   }
 }
 
-// Инициализация при загрузке страницы
 window.onload = function() {
-  if (localStorage.getItem('darkTheme') === 'true') {
+  // Инициализация темы
+  const isDarkTheme = localStorage.getItem('darkTheme') === 'true';
+  if (isDarkTheme) {
     document.body.classList.add('dark-theme');
-  
+  }
+
+  // Инициализация иконки темы
   const themeToggle = document.querySelector('.theme-toggle');
   if (themeToggle) {
     const themeIcon = document.createElement('i');
-    themeIcon.className = document.body.classList.contains('dark-theme') ? 'fas fa-sun' : 'fas fa-moon';
+    themeIcon.className = isDarkTheme ? 'fas fa-sun' : 'fas fa-moon';
     themeToggle.appendChild(themeIcon);
-  
-  const themeIcon = document.createElement('i');
-themeIcon.className = localStorage.getItem('darkTheme') === 'true' ? 'fas fa-sun' : 'fas fa-moon';
-document.querySelector('.theme-toggle').appendChild(themeIcon);
-
-  if (localStorage.getItem('darkTheme') === 'true') {
-    document.body.classList.add('dark-theme');
-    }
   }
-}
+
+  // Остальной код инициализации...
+  loadFormData();
+  updateRates();
   
   // Инициализация сворачиваемой инструкции
   const guide = document.querySelector('.guide');
@@ -333,12 +331,14 @@ document.querySelector('.theme-toggle').appendChild(themeIcon);
 
   // Обработчики для полей ввода
   document.querySelectorAll('input[type="number"]').forEach(input => {
-    // Очищаем поле при получении фокуса, если значение 0
     input.addEventListener('focus', function() {
-      if (this.value === '0') {
-        this.value = '';
-      }
+      if (this.value === '0') this.value = '';
     });
+    input.addEventListener('blur', function() {
+      if (this.value === '') this.value = '0';
+    });
+  });
+};
 
     // Устанавливаем 0 если поле пустое при потере фокуса
     input.addEventListener('blur', function() {
