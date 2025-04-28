@@ -1,112 +1,119 @@
 <!DOCTYPE html>
 <html lang="ru">
-<link rel="stylesheet" href="style.css">
-
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Калькулятор зарплаты</title>
-
+  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
 </head>
 
 <body>
   <div id="auth-screen" class="auth-screen">
-  <div class="auth-box">
-    <h1>Доступ к калькулятору</h1>
-    <input type="password" id="regionPassword" placeholder="Введите пароль региона">
-    <button onclick="checkPassword()">Войти</button>
-    <div id="password-error" class="error-message"></div>
+    <div class="auth-box">
+      <h1>Доступ к калькулятору</h1>
+      <input type="password" id="regionPassword" placeholder="Введите пароль региона">
+      <button onclick="checkPassword()">Войти</button>
+      <div id="password-error" class="error-message"></div>
+      <div class="password-hints">
+        <p>Доступные пароли:</p>
+        <ul>
+          <li><strong>msk_zpc</strong> - Москва</li>
+          <li><strong>kz_zpc</strong> - Казахстан</li>
+        </ul>
+      </div>
+    </div>
   </div>
-</div>
-<div id="calculator-app" class="hidden">
-  <div class="calculator">
-    <h1>Калькулятор зарплаты</h1>
-    
-    <div class="form-group">
-      <label for="position">Выберите должность</label>
-      <select id="position" onchange="updateRates()">
-        <option value="oper">Оператор</option>
-        <option value="ss">Старший смены</option>
-        <option value="st">Стажёр</option>
-      </select>
-    </div>
+  
+  <div id="calculator-app" class="hidden">
+    <div class="calculator">
+      <h1>Калькулятор зарплаты</h1>
+      
+      <div class="form-group">
+        <label for="position">Выберите должность</label>
+        <select id="position" onchange="updateRates()">
+          <!-- Вакансии будут заполнены скриптом -->
+        </select>
+      </div>
 
-    <div class="shifts-group">
-      <div class="shifts-header">Количество смен</div>
-      
-      <div class="shift-input-group">
-        <label for="dayShifts">Дневные</label>
-        <input type="number" id="dayShifts" min="0" placeholder="0">
+      <div class="shifts-group">
+        <div class="shifts-header">Количество смен</div>
+        
+        <div class="shift-input-group">
+          <label for="dayShifts">Дневные</label>
+          <input type="number" id="dayShifts" min="0" placeholder="0">
+        </div>
+        
+        <div class="shift-input-group">
+          <label for="nightShifts">Ночные</label>
+          <input type="number" id="nightShifts" min="0" placeholder="0">
+        </div>
       </div>
-      
-      <div class="shift-input-group">
-        <label for="nightShifts">Ночные</label>
-        <input type="number" id="nightShifts" min="0" placeholder="0">
-      </div>
-    </div>
 
-    <div class="shifts-group">
-      <div class="shifts-header">Праздничные смены</div>
-      
-      <div class="shift-input-group">
-        <label for="holidayDay">Дневные</label>
-        <input type="number" id="holidayDay" min="0" placeholder="0">
+      <div class="shifts-group">
+        <div class="shifts-header">Праздничные смены</div>
+        
+        <div class="shift-input-group">
+          <label for="holidayDay">Дневные</label>
+          <input type="number" id="holidayDay" min="0" placeholder="0">
+        </div>
+        
+        <div class="shift-input-group">
+          <label for="holidayNight">Ночные</label>
+          <input type="number" id="holidayNight" min="0" placeholder="0">
+        </div>
       </div>
       
-      <div class="shift-input-group">
-        <label for="holidayNight">Ночные</label>
-        <input type="number" id="holidayNight" min="0" placeholder="0">
+      <div class="form-group">
+        <label for="dayOffs">Количество дней отгула (Day Off)</label>
+        <input type="number" id="dayOffs" min="0" placeholder="0">
       </div>
-    </div>
-    
-    <div class="form-group">
-      <label for="dayOffs">Количество дней отгула (Day Off)</label>
-      <input type="number" id="dayOffs" min="0" placeholder="0">
-    </div>
-    
-    <div class="form-group">
-      <label for="vacationDays">Отпускные дни</label>
-      <input type="number" id="vacationDays" min="0" placeholder="0">
-    </div>
-    
-    <div class="form-group">
-      <label for="sickDays">Больничные дни</label>
-      <input type="number" id="sickDays" min="0" placeholder="0">
-    </div>
-    
-    <div class="form-group">
-      <label for="penalties">Штрафы (KZT)</label>
-      <input type="number" id="penalties" min="0" placeholder="0">
-    </div>
-    
-    <div class="form-group">
-      <label for="bonuses">Премии (KZT)</label>
-      <input type="number" id="bonuses" min="0" placeholder="0">
-    </div>
-    
-    <div class="form-group">
-      <label for="receivedAmount">Поступило (KZT)</label>
-      <input type="number" id="receivedAmount" min="0" placeholder="0">
-    </div>
-    
-    <div class="checkboxes-container">
-
-      <div class="checkbox-group">
-        <input type="checkbox" id="efficiency" checked>
-        <label for="efficiency">Премия за эффективность (+10%)</label>
+      
+      <div class="form-group">
+        <label for="vacationDays">Отпускные дни</label>
+        <input type="number" id="vacationDays" min="0" placeholder="0">
       </div>
+      
+      <div class="form-group">
+        <label for="sickDays">Больничные дни</label>
+        <input type="number" id="sickDays" min="0" placeholder="0">
+      </div>
+      
+      <div class="form-group">
+        <label for="penalties">Штрафы (<span class="currency-symbol">KZT</span>)</label>
+        <input type="number" id="penalties" min="0" placeholder="0">
+      </div>
+      
+      <div class="form-group">
+        <label for="bonuses">Премии (<span class="currency-symbol">KZT</span>)</label>
+        <input type="number" id="bonuses" min="0" placeholder="0">
+      </div>
+      
+      <div class="form-group">
+        <label for="receivedAmount">Поступило (<span class="currency-symbol">KZT</span>)</label>
+        <input type="number" id="receivedAmount" min="0" placeholder="0">
+      </div>
+      
+      <div class="checkboxes-container">
+        <div class="checkbox-group">
+          <input type="checkbox" id="efficiency" checked>
+          <label for="efficiency">Премия за эффективность (+10%)</label>
+        </div>
+      </div>
+      
+      <div class="button-group">
+        <button onclick="calculateSalary()">Рассчитать зарплату</button>
+        <button onclick="resetForm()" class="secondary">Сбросить форму</button>
+      </div>
+      
+      <div class="result hidden" id="result"></div>
     </div>
-    
-    <div class="button-group">
-      <button onclick="calculateSalary()">Рассчитать зарплату</button>
-      <button onclick="resetForm()" class="secondary">Сбросить форму</button>
-    </div>
-    
-    <div class="result hidden" id="result"></div>
-    
   </div>
-</div>
+
+  <button class="theme-toggle" onclick="toggleTheme()">
+    <i class="fas fa-moon"></i>
+  </button>
+  
   <script src="script.js"></script>
-<button class="theme-toggle" onclick="toggleTheme()"></button>
 </body>
 </html>
