@@ -282,14 +282,13 @@ function loadFormData() {
 
 // Переключение видимости инструкции
 function toggleGuide() {
-  document.body.classList.toggle('dark-theme');
-  
-  const isDark = document.body.classList.contains('dark-theme');
-  localStorage.setItem('darkTheme', isDark);
-  
-  const themeIcon = document.querySelector('.theme-toggle i');
-  if (themeIcon) {
-    themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
+  const guide = document.querySelector('.guide');
+  guide.classList.toggle('collapsed');
+
+  // Устанавливаем высоту контента перед анимацией
+  if (!guide.classList.contains('collapsed')) {
+    const content = guide.querySelector('.guide-content');
+    content.style.maxHeight = content.scrollHeight + 'px';
   }
 }
 
@@ -297,18 +296,35 @@ function toggleGuide() {
 function toggleTheme() {
   document.body.classList.toggle('dark-theme');
   localStorage.setItem('darkTheme', document.body.classList.contains('dark-theme'));
+  
+  // Обновляем иконку темы
+  const themeIcon = document.querySelector('.theme-toggle i');
+  if (themeIcon) {
+    themeIcon.className = document.body.classList.contains('dark-theme') ? 'fas fa-sun' : 'fas fa-moon';
+  }
 }
 
 // Инициализация при загрузке страницы
 window.onload = function() {
+  if (localStorage.getItem('darkTheme') === 'true') {
+    document.body.classList.add('dark-theme');
+  
+  const themeToggle = document.querySelector('.theme-toggle');
+  if (themeToggle) {
+    const themeIcon = document.createElement('i');
+    themeIcon.className = document.body.classList.contains('dark-theme') ? 'fas fa-sun' : 'fas fa-moon';
+    themeToggle.appendChild(themeIcon);
+  
   const themeIcon = document.createElement('i');
 themeIcon.className = localStorage.getItem('darkTheme') === 'true' ? 'fas fa-sun' : 'fas fa-moon';
 document.querySelector('.theme-toggle').appendChild(themeIcon);
 
   if (localStorage.getItem('darkTheme') === 'true') {
     document.body.classList.add('dark-theme');
+    }
   }
-
+}
+  
   // Инициализация сворачиваемой инструкции
   const guide = document.querySelector('.guide');
   const content = guide.querySelector('.guide-content');
