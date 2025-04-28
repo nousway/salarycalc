@@ -338,15 +338,6 @@ window.onload = function() {
       if (this.value === '') this.value = '0';
     });
   });
-};
-
-    // Устанавливаем 0 если поле пустое при потере фокуса
-    input.addEventListener('blur', function() {
-      if (this.value === '') {
-        this.value = '0';
-      }
-    });
-  });
 
   // Если есть пароль в URL (для удобства тестирования)
   const urlParams = new URLSearchParams(window.location.search);
