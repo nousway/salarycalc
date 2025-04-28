@@ -3,10 +3,10 @@ const regionConfigs = {
   msk_zpc: {
     name: "Москва",
     currency: "RUB",
-    vacancies: ["Оператор", "Стажёр"], // Убрали "Старший смены" для Москвы
+    vacancies: ["Оператор", "Стажёр"],
     rates: {
-      oper: { dayShift: 22858, nightShift: 25142, vacationSick: 13285.71 },
-      st: { dayShift: 19429, nightShift: 21370, vacationSick: 0 }
+      oper: { dayShift: 5610, nightShift: 5520, vacationSick: 3285.71 },
+      st: { dayShift: 5000, nightShift: 5000, vacationSick: 0 }
     }
   },
   kz_zpc: {
@@ -282,13 +282,14 @@ function loadFormData() {
 
 // Переключение видимости инструкции
 function toggleGuide() {
-  const guide = document.querySelector('.guide');
-  guide.classList.toggle('collapsed');
-
-  // Устанавливаем высоту контента перед анимацией
-  if (!guide.classList.contains('collapsed')) {
-    const content = guide.querySelector('.guide-content');
-    content.style.maxHeight = content.scrollHeight + 'px';
+  document.body.classList.toggle('dark-theme');
+  
+  const isDark = document.body.classList.contains('dark-theme');
+  localStorage.setItem('darkTheme', isDark);
+  
+  const themeIcon = document.querySelector('.theme-toggle i');
+  if (themeIcon) {
+    themeIcon.className = isDark ? 'fas fa-sun' : 'fas fa-moon';
   }
 }
 
@@ -300,7 +301,10 @@ function toggleTheme() {
 
 // Инициализация при загрузке страницы
 window.onload = function() {
-  // Проверяем сохраненную тему
+  const themeIcon = document.createElement('i');
+themeIcon.className = localStorage.getItem('darkTheme') === 'true' ? 'fas fa-sun' : 'fas fa-moon';
+document.querySelector('.theme-toggle').appendChild(themeIcon);
+
   if (localStorage.getItem('darkTheme') === 'true') {
     document.body.classList.add('dark-theme');
   }
