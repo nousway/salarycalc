@@ -50,12 +50,10 @@ function checkPassword() {
 function updateRegionInfo() {
   document.title = `Калькулятор зарплаты | ${currentRegion.name}`;
   
-  // Принудительно устанавливаем RUB для московского региона
   const currencyToShow = currentRegion.name === "Москва" ? "RUB" : currentRegion.currency;
   
   const currencyElements = document.querySelectorAll('.currency-symbol, [for="bonuses"], [for="penalties"], [for="receivedAmount"]');
   currencyElements.forEach(el => {
-    // Обновляем текст в скобках (KZT) → (RUB)
     if (el.textContent.includes('(')) {
       el.textContent = el.textContent.replace(/\(.*\)/, `(${currencyToShow})`);
     } else {
@@ -90,7 +88,6 @@ function updateRates() {
   nightShiftRate = currentRegion.rates[position]?.nightShift || 0;
   vacationSickRate = currentRegion.rates[position]?.vacationSick || 0;
   
-  // Расчет ставки Day Off
   dayOffRate = (dayShiftRate + nightShiftRate) / 2;
 }
 
@@ -103,7 +100,6 @@ function formatNumber(num) {
 function calculateSalary() {
   try {
     const position = document.getElementById('position').value;
-    // Получаем значения из формы
     const dayShifts = parseInt(document.getElementById('dayShifts').value) || 0;
     const nightShifts = parseInt(document.getElementById('nightShifts').value) || 0;
     const holidayDay = parseInt(document.getElementById('holidayDay').value) || 0;
@@ -117,56 +113,43 @@ function calculateSalary() {
     const advanceChecked = document.getElementById('avans').checked;
     const efficiencyChecked = document.getElementById('efficiency').checked;
 
-    // Проверка на отрицательные значения
     if ([dayShifts, nightShifts, holidayDay, holidayNight, dayOffs, vacationDays, sickDays, penalties, bonuses, receivedAmount].some(val => val < 0)) {
       throw new Error("Все значения должны быть положительными");
     }
 
-    // Проверка на максимальное количество смен (31 день)
     const totalShifts = dayShifts + nightShifts + holidayDay + holidayNight;
     if (totalShifts > 31) {
       throw new Error(`Общее количество смен (${totalShifts}) превышает максимально возможное (31)`);
     }
 
-    // Проверка для испытательного срока
     if (position === 'st' && (vacationDays > 0 || sickDays > 0)) {
       if (!confirm("Для стажёра отпускные/больничные не предусмотрены. Продолжить без учета этих дней?")) {
         return;
       }
     }
 
-    // Расчет базовой зарплаты
     let regularDaySalary = dayShifts * dayShiftRate;
     let regularNightSalary = nightShifts * nightShiftRate;
 
-    // Применение премии за эффективность (10% только к обычным сменам)
     if (efficiencyChecked) {
       regularDaySalary *= 1.10;
       regularNightSalary *= 1.10;
     }
 
-    // Расчет праздничных смен (без премии за эффективность)
     const holidayDaySalary = holidayDay * dayShiftRate;
     const holidayNightSalary = holidayNight * nightShiftRate;
-
-    // Расчет Day Off
     const dayOffSalary = dayOffs * dayOffRate;
-
-    // Расчет отпускных/больничных
     const vacationSickSalary = (vacationDays + sickDays) * vacationSickRate;
 
-    // Итоговый расчет
-    let totalSalary = regularDaySalary + regularNightSalary + 
-                     holidayDaySalary + holidayNightSalary + 
-                     dayOffSalary + vacationSickSalary - 
-                     penalties + bonuses;
+    let totalSalary = regularDaySalary + regularNightSalary +
+                      holidayDaySalary + holidayNightSalary +
+                      dayOffSalary + vacationSickSalary -
+                      penalties + bonuses;
 
-    // Вычет аванса
     if (advanceChecked) {
       totalSalary -= currentRegion.advanceAmount;
     }
 
-    // Расчет разницы с полученной суммой
     const difference = totalSalary - receivedAmount;
     let differenceText = '';
 
@@ -180,7 +163,6 @@ function calculateSalary() {
       }
     }
 
-    // Формируем детализированный результат
     let resultHTML = `
       <div style="text-align: left; margin-bottom: 10px;">
         <div>Обычные дневные: ${dayShifts} × ${formatNumber(dayShiftRate)} = <strong>${formatNumber(regularDaySalary)} ${currentRegion.currency}</strong></div>
@@ -192,7 +174,7 @@ function calculateSalary() {
         ${sickDays > 0 && vacationSickRate > 0 ? `<div>Больничные: ${sickDays} × ${formatNumber(vacationSickRate)} = <strong>${formatNumber(sickDays * vacationSickRate)} ${currentRegion.currency}</strong></div>` : ''}
         ${penalties > 0 ? `<div>Штрафы: -${formatNumber(penalties)} ${currentRegion.currency}</div>` : ''}
         ${bonuses > 0 ? `<div>Премии: +${formatNumber(bonuses)} ${currentRegion.currency}</div>` : ''}
-        ${advanceChecked ? `<div>Аванс: -${currentRegion.advanceAmount.toLocaleString('ru-RU')} ${currency}</div>` : ''}
+        ${advanceChecked ? `<div>Аванс: -${currentRegion.advanceAmount.toLocaleString('ru-RU')} ${currentRegion.currency}</div>` : ''}
         ${receivedAmount > 0 ? `<div>Поступило: ${formatNumber(receivedAmount)} ${currentRegion.currency}</div>` : ''}
       </div>
       <div style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px;">
@@ -201,23 +183,12 @@ function calculateSalary() {
       </div>
     `;
 
-    // Проверка на отрицательную зарплату
-    if (totalSalary < 0) {
-      document.getElementById('result').style.color = 'var(--accent-color)';
-    } else {
-      document.getElementById('result').style.color = 'var(--primary-color)';
-    }
-
+    document.getElementById('result').style.color = totalSalary < 0 ? 'var(--accent-color)' : 'var(--primary-color)';
     document.getElementById('result').innerHTML = resultHTML;
+    document.getElementById('result').classList.remove('hidden');
+    document.getElementById('result').classList.add('fadeIn');
 
-    // Показываем результат с анимацией
-    const resultElement = document.getElementById('result');
-    resultElement.classList.remove('hidden');
-    resultElement.classList.add('fadeIn');
-
-    // Сохраняем данные в localStorage
     saveFormData();
-
   } catch (error) {
     alert(`Ошибка: ${error.message}`);
     console.error(error);
@@ -240,8 +211,6 @@ function resetForm() {
   document.getElementById('avans').checked = false;
   document.getElementById('efficiency').checked = true;
   document.getElementById('result').classList.add('hidden');
-
-  // Обновляем ставки после сброса
   updateRates();
 }
 
@@ -271,7 +240,6 @@ function loadFormData() {
   const savedData = localStorage.getItem('salaryCalculatorData');
   if (savedData) {
     const formData = JSON.parse(savedData);
-
     document.getElementById('position').value = formData.position || 'oper';
     document.getElementById('dayShifts').value = formData.dayShifts || '';
     document.getElementById('nightShifts').value = formData.nightShifts || '';
@@ -285,8 +253,6 @@ function loadFormData() {
     document.getElementById('receivedAmount').value = formData.receivedAmount || '';
     document.getElementById('avans').checked = formData.avans || false;
     document.getElementById('efficiency').checked = formData.efficiency !== false;
-
-    // Обновляем ставки при загрузке
     updateRates();
   }
 }
@@ -295,8 +261,6 @@ function loadFormData() {
 function toggleGuide() {
   const guide = document.querySelector('.guide');
   guide.classList.toggle('collapsed');
-
-  // Устанавливаем высоту контента перед анимацией
   if (!guide.classList.contains('collapsed')) {
     const content = guide.querySelector('.guide-content');
     content.style.maxHeight = content.scrollHeight + 'px';
@@ -307,8 +271,6 @@ function toggleGuide() {
 function toggleTheme() {
   document.body.classList.toggle('dark-theme');
   localStorage.setItem('darkTheme', document.body.classList.contains('dark-theme'));
-  
-  // Обновляем иконку темы
   const themeIcon = document.querySelector('.theme-toggle i');
   if (themeIcon) {
     themeIcon.className = document.body.classList.contains('dark-theme') ? 'fas fa-sun' : 'fas fa-moon';
@@ -316,13 +278,11 @@ function toggleTheme() {
 }
 
 window.onload = function() {
-  // Инициализация темы
   const isDarkTheme = localStorage.getItem('darkTheme') === 'true';
   if (isDarkTheme) {
     document.body.classList.add('dark-theme');
   }
 
-  // Инициализация иконки темы
   const themeToggle = document.querySelector('.theme-toggle');
   if (themeToggle) {
     const themeIcon = document.createElement('i');
@@ -330,17 +290,14 @@ window.onload = function() {
     themeToggle.appendChild(themeIcon);
   }
 
-  // Остальной код инициализации...
   loadFormData();
   updateRates();
-  
-  // Инициализация сворачиваемой инструкции
+
   const guide = document.querySelector('.guide');
   const content = guide.querySelector('.guide-content');
   content.style.maxHeight = content.scrollHeight + 'px';
   guide.classList.add('collapsed');
 
-  // Обработчики для полей ввода
   document.querySelectorAll('input[type="number"]').forEach(input => {
     input.addEventListener('focus', function() {
       if (this.value === '0') this.value = '';
@@ -350,7 +307,6 @@ window.onload = function() {
     });
   });
 
-  // Если есть пароль в URL (для удобства тестирования)
   const urlParams = new URLSearchParams(window.location.search);
   const passwordParam = urlParams.get('password');
   if (passwordParam && regionConfigs[passwordParam]) {
