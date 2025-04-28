@@ -374,23 +374,26 @@ body {
   }
 
   /* Стили для печати */
-  @media print {
-    body {
-      background: none;
-      padding: 0;
-    }
-
-    .calculator {
-      box-shadow: none;
-      border: none;
-      max-width: 100%;
-    }
-
-    button, .guide h2 {
-      display: none;
-    }
-
-    input[type="number"]:placeholder-shown {
-      visibility: hidden;
-    }
+  @media (max-width: 480px) {
+  .calculator {
+    padding: 15px;
+    margin: 10px;
   }
+  
+  h1 {
+    font-size: 24px;
+  }
+  
+  .form-group, .shifts-group {
+    margin-bottom: 15px;
+  }
+  
+  input[type="number"], select {
+    padding: 10px 12px;
+    font-size: 15px;
+  }
+  
+  button {
+    padding: 12px 15px;
+  }
+}
