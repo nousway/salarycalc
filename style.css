@@ -14,12 +14,50 @@
     box-sizing: border-box;
     font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
   }
+
+.auth-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: rgba(0,0,0,0.7);
+  z-index: 1000;
+}
+
 .auth-box {
-    display: grid;
-    grid-template-columns: 1fr 1fr;
-    gap: 15px;
-    margin-bottom: 20px;
-  }
+  background: white;
+  padding: 30px;
+  border-radius: var(--border-radius);
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+
+.auth-box input {
+  width: 100%;
+  padding: 12px;
+  margin: 15px 0;
+  border: 1px solid #ddd;
+  border-radius: var(--border-radius);
+}
+
+.error-message {
+  color: var(--accent-color);
+  margin: 10px 0;
+}
+
+.password-hints {
+  margin-top: 20px;
+  font-size: 14px;
+  text-align: left;
+  background: var(--light-color);
+  padding: 15px;
+  border-radius: var(--border-radius);
+}
 
 /* Темная тема */
 body.dark-theme {
