@@ -10,6 +10,22 @@
 </head>
 
 <body>
+  <div id="auth-screen" class="auth-screen">
+  <div class="auth-box">
+    <h1>Доступ к калькулятору</h1>
+    <input type="password" id="regionPassword" placeholder="Введите пароль региона">
+    <button onclick="checkPassword()">Войти</button>
+    <div id="password-error" class="error-message"></div>
+    <div class="password-hints">
+      <p>Доступные пароли:</p>
+      <ul>
+        <li><strong>msk_zpc</strong> - Москва</li>
+        <li><strong>kz_zpc</strong> - Казахстан</li>
+      </ul>
+    </div>
+  </div>
+</div>
+<div id="calculator-app" class="hidden">
   <div class="calculator">
     <h1>Калькулятор зарплаты</h1>
     
@@ -156,7 +172,7 @@
       </div>
     </div>
   </div>
-
+</div>
   <script src="script.js"></script>
   
 </body>
