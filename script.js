@@ -47,9 +47,18 @@ function checkPassword() {
 // Обновление информации о регионе
 function updateRegionInfo() {
   document.title = `Калькулятор зарплаты | ${currentRegion.name}`;
-  const currencyElements = document.querySelectorAll('.currency-symbol');
+  
+  // Принудительно устанавливаем RUB для московского региона
+  const currencyToShow = currentRegion.name === "Москва" ? "RUB" : currentRegion.currency;
+  
+  const currencyElements = document.querySelectorAll('.currency-symbol, [for="bonuses"], [for="penalties"], [for="receivedAmount"]');
   currencyElements.forEach(el => {
-    el.textContent = currentRegion.currency;
+    // Обновляем текст в скобках (KZT) → (RUB)
+    if (el.textContent.includes('(')) {
+      el.textContent = el.textContent.replace(/\(.*\)/, `(${currencyToShow})`);
+    } else {
+      el.textContent = currencyToShow;
+    }
   });
 }
 
