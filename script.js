@@ -3,6 +3,7 @@ const regionConfigs = {
   msk_zpc: {
     name: "Москва",
     currency: "RUB",
+    advanceAmount: 14500,
     vacancies: ["Оператор", "Стажёр"],
     rates: {
       oper: { dayShift: 5610, nightShift: 5520, vacationSick: 3285.71 },
@@ -12,6 +13,7 @@ const regionConfigs = {
   kz_zpc: {
     name: "Казахстан",
     currency: "KZT",
+    advanceAmount: 70000,
     vacancies: ["Оператор", "Старший смены", "Стажёр"],
     rates: {
       oper: { dayShift: 22858, nightShift: 25142, vacationSick: 13285.71 },
@@ -161,7 +163,7 @@ function calculateSalary() {
 
     // Вычет аванса
     if (advanceChecked) {
-      totalSalary -= 70000;
+      totalSalary -= currentRegion.advanceAmount;
     }
 
     // Расчет разницы с полученной суммой
@@ -190,7 +192,7 @@ function calculateSalary() {
         ${sickDays > 0 && vacationSickRate > 0 ? `<div>Больничные: ${sickDays} × ${formatNumber(vacationSickRate)} = <strong>${formatNumber(sickDays * vacationSickRate)} ${currentRegion.currency}</strong></div>` : ''}
         ${penalties > 0 ? `<div>Штрафы: -${formatNumber(penalties)} ${currentRegion.currency}</div>` : ''}
         ${bonuses > 0 ? `<div>Премии: +${formatNumber(bonuses)} ${currentRegion.currency}</div>` : ''}
-        ${advanceChecked ? `<div>Аванс: -70 000 ${currentRegion.currency}</div>` : ''}
+        ${advanceChecked ? `<div>Аванс: -${currentRegion.advanceAmount.toLocaleString('ru-RU')} ${currency}</div>` : ''}
         ${receivedAmount > 0 ? `<div>Поступило: ${formatNumber(receivedAmount)} ${currentRegion.currency}</div>` : ''}
       </div>
       <div style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px;">
