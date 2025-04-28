@@ -3,7 +3,6 @@ const regionConfigs = {
   msk_zpc: {
     name: "Москва",
     currency: "RUB",
-    advanceAmount: 14500,
     vacancies: ["Оператор", "Стажёр"],
     rates: {
       oper: { dayShift: 5610, nightShift: 5520, vacationSick: 3285.71 },
@@ -13,7 +12,6 @@ const regionConfigs = {
   kz_zpc: {
     name: "Казахстан",
     currency: "KZT",
-    advanceAmount: 70000,
     vacancies: ["Оператор", "Старший смены", "Стажёр"],
     rates: {
       oper: { dayShift: 22858, nightShift: 25142, vacationSick: 13285.71 },
@@ -110,7 +108,6 @@ function calculateSalary() {
     const penalties = parseFloat(document.getElementById('penalties').value) || 0;
     const bonuses = parseFloat(document.getElementById('bonuses').value) || 0;
     const receivedAmount = parseFloat(document.getElementById('receivedAmount').value) || 0;
-    const advanceChecked = document.getElementById('avans').checked;
     const efficiencyChecked = document.getElementById('efficiency').checked;
 
     if ([dayShifts, nightShifts, holidayDay, holidayNight, dayOffs, vacationDays, sickDays, penalties, bonuses, receivedAmount].some(val => val < 0)) {
@@ -142,13 +139,9 @@ function calculateSalary() {
     const vacationSickSalary = (vacationDays + sickDays) * vacationSickRate;
 
     let totalSalary = regularDaySalary + regularNightSalary +
-                      holidayDaySalary + holidayNightSalary +
-                      dayOffSalary + vacationSickSalary -
-                      penalties + bonuses;
-
-    if (advanceChecked) {
-      totalSalary -= currentRegion.advanceAmount;
-    }
+                     holidayDaySalary + holidayNightSalary +
+                     dayOffSalary + vacationSickSalary -
+                     penalties + bonuses;
 
     const difference = totalSalary - receivedAmount;
     let differenceText = '';
@@ -174,7 +167,6 @@ function calculateSalary() {
         ${sickDays > 0 && vacationSickRate > 0 ? `<div>Больничные: ${sickDays} × ${formatNumber(vacationSickRate)} = <strong>${formatNumber(sickDays * vacationSickRate)} ${currentRegion.currency}</strong></div>` : ''}
         ${penalties > 0 ? `<div>Штрафы: -${formatNumber(penalties)} ${currentRegion.currency}</div>` : ''}
         ${bonuses > 0 ? `<div>Премии: +${formatNumber(bonuses)} ${currentRegion.currency}</div>` : ''}
-        ${advanceChecked ? `<div>Аванс: -${currentRegion.advanceAmount.toLocaleString('ru-RU')} ${currentRegion.currency}</div>` : ''}
         ${receivedAmount > 0 ? `<div>Поступило: ${formatNumber(receivedAmount)} ${currentRegion.currency}</div>` : ''}
       </div>
       <div style="border-top: 1px solid #ddd; padding-top: 10px; margin-top: 10px;">
@@ -208,7 +200,6 @@ function resetForm() {
   document.getElementById('penalties').value = '';
   document.getElementById('bonuses').value = '';
   document.getElementById('receivedAmount').value = '';
-  document.getElementById('avans').checked = false;
   document.getElementById('efficiency').checked = true;
   document.getElementById('result').classList.add('hidden');
   updateRates();
@@ -228,7 +219,6 @@ function saveFormData() {
     penalties: document.getElementById('penalties').value,
     bonuses: document.getElementById('bonuses').value,
     receivedAmount: document.getElementById('receivedAmount').value,
-    avans: document.getElementById('avans').checked,
     efficiency: document.getElementById('efficiency').checked
   };
 
@@ -251,7 +241,6 @@ function loadFormData() {
     document.getElementById('penalties').value = formData.penalties || '';
     document.getElementById('bonuses').value = formData.bonuses || '';
     document.getElementById('receivedAmount').value = formData.receivedAmount || '';
-    document.getElementById('avans').checked = formData.avans || false;
     document.getElementById('efficiency').checked = formData.efficiency !== false;
     updateRates();
   }
