@@ -116,6 +116,15 @@ body.dark-theme .checkbox-group label {
   align-items: center;
   box-shadow: var(--shadow);
   z-index: 100;
+  outline: none;
+}
+
+.theme-toggle:hover {
+  transform: scale(1.1);
+}
+
+.theme-toggle:active {
+  transform: scale(0.95);
 }
 
 body.dark-theme .theme-toggle {
@@ -361,6 +370,29 @@ body {
   .guide li {
     margin-bottom: 10px;
   }
+
+/* Стили для инструкции */
+.guide h2 {
+  cursor: pointer;
+  position: relative;
+  padding-right: 25px;
+  user-select: none; /* Запрещаем выделение текста при кликах */
+}
+
+.guide h2::after {
+  content: "▼";
+  position: absolute;
+  right: 0;
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 14px;
+  transition: transform 0.3s;
+  color: var(--secondary-color);
+}
+
+.guide.collapsed h2::after {
+  transform: translateY(-50%) rotate(-90deg);
+}
 
   .hidden {
     display: none;
