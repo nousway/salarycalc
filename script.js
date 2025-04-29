@@ -5,8 +5,8 @@ const regionConfigs = {
     currency: "RUB",
     vacancies: ["Оператор", "Стажёр"],
     rates: {
-      oper: { dayShift: 5610, nightShift: 5520, vacationSick: 3285.71 },
-      st: { dayShift: 5000, nightShift: 5000, vacationSick: 0 }
+      oper: { dayShift: 5160, nightShift: 5520, vacationSick: 2956.07 },
+      st: { dayShift: 4386, nightShift: 4692, vacationSick: 0 }
     }
   },
   kz_zpc: {
