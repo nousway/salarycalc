@@ -1,4 +1,3 @@
-// Конфигурации регионов
 const regionConfigs = {
   msk_zpc: {
     name: "Москва",
@@ -21,13 +20,12 @@ const regionConfigs = {
   }
 };
 
-let currentRegion = regionConfigs.kz_zpc; // По умолчанию Казахстан
+let currentRegion = regionConfigs.kz_zpc;
 let dayShiftRate = currentRegion.rates.oper.dayShift;
 let nightShiftRate = currentRegion.rates.oper.nightShift;
 let vacationSickRate = currentRegion.rates.oper.vacationSick;
 let dayOffRate = (dayShiftRate + nightShiftRate) / 2;
 
-// Проверка пароля региона
 function checkPassword() {
   const password = document.getElementById('regionPassword').value.trim();
   const errorElement = document.getElementById('password-error');
@@ -44,7 +42,6 @@ function checkPassword() {
   }
 }
 
-// Обновление информации о регионе
 function updateRegionInfo() {
   document.title = `Калькулятор зарплаты | ${currentRegion.name}`;
   
@@ -60,7 +57,6 @@ function updateRegionInfo() {
   });
 }
 
-// Обновление dropdown с вакансиями
 function updateVacanciesDropdown() {
   const positionSelect = document.getElementById('position');
   positionSelect.innerHTML = '';
@@ -78,7 +74,6 @@ function updateVacanciesDropdown() {
   });
 }
 
-// Обновление ставок при изменении должности
 function updateRates() {
   const position = document.getElementById('position').value;
   
@@ -89,12 +84,10 @@ function updateRates() {
   dayOffRate = (dayShiftRate + nightShiftRate) / 2;
 }
 
-// Форматирование числа с разделителями
 function formatNumber(num) {
   return new Intl.NumberFormat('ru-RU').format(num.toFixed(2));
 }
 
-// Основная функция расчета
 function calculateSalary() {
   try {
     const position = document.getElementById('position').value;
@@ -187,7 +180,6 @@ function calculateSalary() {
   }
 }
 
-// Сброс формы
 function resetForm() {
   document.getElementById('position').value = 'oper';
   document.getElementById('dayShifts').value = '';
@@ -205,7 +197,6 @@ function resetForm() {
   updateRates();
 }
 
-// Сохранение данных формы
 function saveFormData() {
   const formData = {
     position: document.getElementById('position').value,
@@ -225,7 +216,6 @@ function saveFormData() {
   localStorage.setItem('salaryCalculatorData', JSON.stringify(formData));
 }
 
-// Загрузка сохраненных данных
 function loadFormData() {
   const savedData = localStorage.getItem('salaryCalculatorData');
   if (savedData) {
@@ -246,7 +236,6 @@ function loadFormData() {
   }
 }
 
-// Переключение видимости инструкции
 function toggleGuide() {
   const guide = document.querySelector('.guide');
   guide.classList.toggle('collapsed');
@@ -256,7 +245,6 @@ function toggleGuide() {
   }
 }
 
-// Переключение темы
 function toggleTheme() {
   document.body.classList.toggle('dark-theme');
   localStorage.setItem('darkTheme', document.body.classList.contains('dark-theme'));
@@ -296,7 +284,7 @@ window.onload = function() {
     });
   });
 
-  const urlParams = new URLSearchParams(window.location.search);
+  const urlParams = new URLSearchParams(window.location.hash);
   const passwordParam = urlParams.get('password');
   if (passwordParam && regionConfigs[passwordParam]) {
     document.getElementById('regionPassword').value = passwordParam;
