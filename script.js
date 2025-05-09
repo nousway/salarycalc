@@ -1,5 +1,5 @@
 const regionConfigs = {
-  msk_zpc: {
+  moskot: {
     name: "Москва",
     currency: "RUB",
     vacancies: ["Оператор", "Стажёр"],
@@ -8,7 +8,7 @@ const regionConfigs = {
       st: { dayShift: 4386, nightShift: 4692, vacationSick: 0 }
     }
   },
-  kz_zpc: {
+  kazbek: {
     name: "Казахстан",
     currency: "KZT",
     vacancies: ["Оператор", "Старший смены", "Стажёр"],
@@ -20,7 +20,7 @@ const regionConfigs = {
   }
 };
 
-let currentRegion = regionConfigs.kz_zpc;
+let currentRegion = regionConfigs.kazbek;
 let dayShiftRate = currentRegion.rates.oper.dayShift;
 let nightShiftRate = currentRegion.rates.oper.nightShift;
 let vacationSickRate = currentRegion.rates.oper.vacationSick;
